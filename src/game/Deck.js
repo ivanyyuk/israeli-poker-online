@@ -1,4 +1,3 @@
-'use strict'
 
 const Card = require('./Card');
 
@@ -35,9 +34,9 @@ class Deck {
   }
 
   dealNextTwo(p1, p2) { 
-    p1.nextCard = this.deck.cards[this.index];
+    p1.nextCard = this.cards[this.index];
     this.index++;
-    p2.nextCard = this.deck.cards[this.index];
+    p2.nextCard = this.cards[this.index];
     this.index++;
   }
 }

@@ -1,0 +1,79 @@
+.App {
+  text-align: center;
+}
+
+.App-logo {
+  animation: App-logo-spin infinite 20s linear;
+  height: 80px;
+}
+
+.App-header {
+  background-color: #222;
+  height: 150px;
+  padding: 20px;
+  color: white;
+}
+
+.App-intro {
+  font-size: large;
+}
+
+@keyframes App-logo-spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+.player-hand {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  justify-content: center;
+}
+
+.opponent-hand {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  justify-content: center;
+}
+
+.player-hand .card-column {
+  display: flex;
+  flex-direction: column;
+}
+.opponent-hand .card-column {
+  display: flex;
+  flex-direction: column-reverse;
+}
+
+.card img {
+  width: 30px;
+}
+
+.board {
+  display:flex;
+  align-items: center;
+  flex-direction: column;
+}
+.board div {
+  width: 75%;
+}
+
+.player-board {
+  display: flex;
+  flex-direction:row;
+  justify-content: center;
+  align-items:center;
+}
+
+.opponent-board {
+  display: flex;
+  flex-direction:row;
+  justify-content: center;
+  align-items:center;
+  
+}
+
+.next-card {
+}
+

@@ -1,5 +1,3 @@
-'use strict'
-
 const Hand = require('./Hand');
 
 class Player {
@@ -14,6 +12,9 @@ class Player {
     ];
     this.name = name;
     this.nextCard = {};
+    if (position === 1) {
+      this.cardPosX = -1;
+    }
   }
 }
 

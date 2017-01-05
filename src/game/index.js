@@ -1,9 +1,15 @@
-'use strict' 
+import Game from './Game';
+import Card from './Card';
+import Deck from './Deck';
+import Hand from './Hand';
+import Player from './Player';
 
-const Game = require('./Game');
 
-const game = new Game();
- game.init();
-console.log(game.playerOne.hands)
-console.log(game.playerTwo.hands)
+export {
+  Game,
+  Card,
+  Deck,
+  Hand,
+  Player
+}
 

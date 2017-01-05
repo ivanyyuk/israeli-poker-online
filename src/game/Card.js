@@ -1,4 +1,3 @@
-'use strict'
 
 class Card {
   constructor(seed){ // seed will be 1 to 52
@@ -36,7 +35,7 @@ class Card {
       case 0:
         return 'King';
       default:
-        return value % 13;
+        return seed % 13;
     }
   }
 
