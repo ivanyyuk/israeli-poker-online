@@ -3,6 +3,7 @@ import './App.css';
 import Board from './Board';
 import Menu from './Menu';
 import { Game } from '../game';
+import axios from 'axios';
 
 const game = new Game();
 game.init();
@@ -68,7 +69,7 @@ class App extends Component {
     let x = this.state.playerOne.cardPosX;
     let y = this.state.currentRow;
     let nextCard = hands[x].cards[y];
-    hands[x].cards[y] = 0;
+    hands[x].cards[y] = 0
     this.setState({
       playerOne: {
         hands,

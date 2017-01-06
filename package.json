@@ -6,9 +6,13 @@
     "react-scripts": "0.8.4"
   },
   "dependencies": {
+    "axios": "^0.15.3",
+    "body-parser": "^1.15.2",
     "express": "^4.14.0",
+    "morgan": "^1.7.0",
     "react": "^15.4.1",
     "react-dom": "^15.4.1",
+    "redux": "^3.6.0",
     "socket.io": "^1.7.2"
   },
   "scripts": {
@@ -16,6 +20,6 @@
     "build": "react-scripts build",
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject",
-    "start-server": "nodemon src/server/app/index.js"
+    "start-server": "nodemon src/server/index.js"
   }
 }
