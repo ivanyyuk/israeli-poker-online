@@ -1,4 +1,5 @@
 
+
 const Player = require('./Player');
 //const Board = require('./Board.js')
 const Deck = require('./Deck');
@@ -19,7 +20,7 @@ class Game {
     this.deck.dealNextTwo(this.playerOne, this.playerTwo);
   }
 
-  checkAndUpdateRow(hands) {
+  updateRowIfNeeded(hands) {
     for (let i = 0; i < hands.length; i++) {
       if (this.playerOne.hands[i].cards[this.currentRow] === 0 ||
         this.playerTwo.hands[i].cards[this.currentRow] === 0) {

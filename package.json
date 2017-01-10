@@ -10,9 +10,13 @@
     "body-parser": "^1.15.2",
     "express": "^4.14.0",
     "morgan": "^1.7.0",
+    "pg": "^6.1.2",
+    "pg-native": "^1.10.0",
     "react": "^15.4.1",
     "react-dom": "^15.4.1",
+    "react-router": "^3.0.0",
     "redux": "^3.6.0",
+    "sequelize": "^3.29.0",
     "socket.io": "^1.7.2"
   },
   "scripts": {
