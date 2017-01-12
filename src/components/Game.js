@@ -3,9 +3,10 @@ import Board from './Board';
 import Menu from './Menu';
 import axios from 'axios';
 
-const BASE_URL = 'http://localhost:8000/api';
+import { BASE_URL } from '../constants';
 
 import initialState from '../initialState';
+import convertToState from '../utils/convertToState';
 
 class Game extends Component {
   constructor() {
@@ -17,15 +18,16 @@ class Game extends Component {
   }
 
   componentDidMount(){
-    axios.get(`${BASE_URL}/newgame`)
+    axios.get(`${BASE_URL}/newgame/${this.props.params.gameId}`)
       .then(res => res.data)
+      .then(gameState => convertToState(gameState))
       .then(state => this.setState(state))
       .then(() => console.log(this.state))
       .catch(console.error);
   }
 
   cardClicker(x, y) {
-    if (this.state.playerOne.hands[x].cards[y] === 0) {
+    if (this.state.playerOne.hands[x][y] === 0) {
       this.moveCardPosition(x,this.state.currentRow);
       //game.placeCard(this.state.playerOne, x, y)
     }
@@ -38,9 +40,9 @@ class Game extends Component {
 
     if (this.state.playerOne.cardPosX !== -1 && 
       this.state.playerOne.cardPosX !== x && //so we don't place card where it already is
-      this.state.playerOne.hands[x].cards[y] === 0) {
-        hands[x].cards[y] = this.state.playerOne.hands[this.state.playerOne.cardPosX].cards[this.state.currentRow];
-        hands[this.state.playerOne.cardPosX].cards[this.state.currentRow] = 0;
+      this.state.playerOne.hands[x][y] === 0) {
+        hands[x][y] = this.state.playerOne.hands[this.state.playerOne.cardPosX][this.state.currentRow];
+        hands[this.state.playerOne.cardPosX][this.state.currentRow] = 0;
         this.setState(Object.assign({}, this.state, {
           playerOne: {
             hands: hands,
@@ -51,8 +53,8 @@ class Game extends Component {
         }));
       }
     else if (this.state.playerOne.cardPosX === -1 &&
-      this.state.playerOne.hands[x].cards[y] === 0) {
-        hands[x].cards[y] = this.state.playerOne.nextCard; 
+      this.state.playerOne.hands[x][y] === 0) {
+        hands[x][y] = this.state.playerOne.nextCard; 
         this.setState(Object.assign({}, this.state, {
           playerOne: {
             hands: hands,
@@ -69,8 +71,8 @@ class Game extends Component {
     let hands = this.state.playerOne.hands;
     let x = this.state.playerOne.cardPosX;
     let y = this.state.currentRow;
-    let nextCard = hands[x].cards[y];
-    hands[x].cards[y] = 0
+    let nextCard = hands[x][y];
+    hands[x][y] = 0
     this.setState({
       playerOne: {
         hands,
@@ -85,7 +87,7 @@ class Game extends Component {
     console.log('move it');
     let x = this.state.playerOne.cardPosX;
     let y = this.state.currentRow;
-    let cardToPlace = this.state.playerOne.hands[x].cards[y];
+    let cardToPlace = this.state.playerOne.hands[x][y];
     console.log('asd',cardToPlace)
     //game.placeCard(this.state.playerOne, x, cardToPlace)
     axios.get(`${BASE_URL}`)

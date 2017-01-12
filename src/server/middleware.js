@@ -1,5 +1,7 @@
 'use strict'
 
+const session = require('express-session');
+const passport = require('passport');
 const bodyParser = require('body-parser');
 const morgan = require('morgan');
 const apiRouter = require('./api/');
@@ -12,7 +14,17 @@ const allowCrossDomain = function(req, res, next) {
 
 
 const applyMiddleware = app => {
-  app.use(bodyParser.json())
+  app.use(session({
+    secret: 'whatevs',
+    resave: false,
+    saveUninitialized: false,
+    genid: function(req) {
+      return Math.floor(Math.random()*9999);
+    }
+  }))
+    .use(passport.initialize())
+    .use(passport.session())
+    .use(bodyParser.json())
     .use(bodyParser.urlencoded({extended:true}))
     .use(morgan('dev'))
     .use(allowCrossDomain)

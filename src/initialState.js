@@ -1,9 +1,15 @@
 export default {
   playerOne : {
-    hands: []
+    hands: [],
+    cardPosX: -1,
+    nextCard: {},
+    position: 1
   },
   playerTwo: {
-    hands: []
+    hands: [],
+    cardPosX: -1,
+    nextCard: {},
+    position: 2
   },
   deck: [],
  currentRow: 0 
