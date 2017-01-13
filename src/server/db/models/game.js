@@ -14,7 +14,9 @@ module.exports = db.define('game', {
   },
   p2Hands: {
     type: Sequelize.ARRAY(Sequelize.ARRAY(Sequelize.INTEGER))
-  }
+  },
+  p1NextCard: Sequelize.INTEGER,
+  p2NextCard : Sequelize.INTEGER
 }, {
   instanceMethods: {
     //p1Hands or p2Hands is a nested array so hand card is row column  basically
@@ -35,12 +37,20 @@ module.exports = db.define('game', {
             this.p2Hands[i][0] = deck.cards[deck.index];
             deck.index++;
           }
+          for (let i = 0; i < 2; i++){
+            this.p1NextCard = deck.cards[deck.index];
+            deck.index++;
+            this.p2NextCard = deck.cards[deck.index];
+            deck.index++;
+          }
           return deck.save();
         })
         .then(() => this.update({
-          currentRow: this.currentRow +1,
+          currentRow: this.currentRow + 1,
           p1Hands: this.p1Hands,
-          p2Hands: this.p2Hands
+          p2Hands: this.p2Hands,
+          p1NextCard: this.p1NextCard,
+          p2NextCard: this.p2NextCard
         }))
         .catch(console.error)
     }

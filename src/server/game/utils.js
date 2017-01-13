@@ -2,10 +2,13 @@
 
 const Card = require('./Card');
 
-//this takes an array or nested array of numbers and makes card objecs 
+//this takes a numver, array or nested array of numbers and makes card objecs 
 //can be used for p1Hand, p2Hand or deck
 //returns new array to reassign
 const convertNumbersToCardObjects = (cardNumbers) => {
+  if (typeof cardNumbers === 'number') return new Card(cardNumbers);
+  
+  //we only get here if dealing with array
   let arr = [];
   arr =  cardNumbers.map(num => {
     if (typeof num !== 'number'){

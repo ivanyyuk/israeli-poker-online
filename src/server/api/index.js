@@ -34,6 +34,9 @@ router.get('/newgame/:id', function (req, res, next) {
       game.p1Hands = convertNumbersToCardObjects(game.p1Hands);
       game.p2Hands = convertNumbersToCardObjects(game.p2Hands);
       game.deck.cards = convertNumbersToCardObjects(game.deck.cards);
+      game.p1NextCard = convertNumbersToCardObjects(game.p1NextCard);
+      game.p2NextCard = convertNumbersToCardObjects(game.p2NextCard);
+      
       console.log(game.toJSON())
       res.send(game)
     })
