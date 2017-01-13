@@ -5,7 +5,7 @@ const router = express.Router();
 const { Game, Deck } = require('../game');
 const  db  = require('../db/db');
 const User = require('../db//models/user');
-const { convertNumbersToCardObjects } = require('../game/utils');
+const { convertNumbersToCardObjects, mutateForFrontEnd } = require('../game/utils');
 
 router.get('/', function (req, res, next) {
   console.log('hit base api');
@@ -24,36 +24,18 @@ router.get('/newgame/:id', function (req, res, next) {
   db.model('game').findById(req.params.id, {include : { all:true } })
     .then(game =>  dealInitial(game))
     .then(gameState => {
-     return db.model('game').findById(gameState.id, {
+      return db.model('game').findById(gameState.id, {
         include: {
           all :true
         }
       })
     })
     .then(game => {
-      game.p1Hands = convertNumbersToCardObjects(game.p1Hands);
-      game.p2Hands = convertNumbersToCardObjects(game.p2Hands);
-      game.deck.cards = convertNumbersToCardObjects(game.deck.cards);
-      game.p1NextCard = convertNumbersToCardObjects(game.p1NextCard);
-      game.p2NextCard = convertNumbersToCardObjects(game.p2NextCard);
-      
-      console.log(game.toJSON())
+      mutateForFrontEnd(game)
       res.send(game)
     })
     .catch(console.error);
-
-  //let game = new Game();
-  //game.init();
-  //db.model('deck').create({
-    //cards:[0,1,2,3,4,5]
-  //})
-    //.then(deck => deck.deal())
-    //.then(card => console.log(card))
-    //.then(() =>
-      //res.send(game)
-    //)
-  //.catch(console.error)
-})
+});
 
 router.get('/getUser', function (req, res, next) {
   if (req.user) res.send(req.user);
@@ -77,5 +59,12 @@ router.get('/myGames/:id', function (req,res,next) {
     .catch(console.error);
 });
 
+router.post('/placeCard/:id', function(req,res,next) {
+  db.model('game').findById(req.params.id)
+    .then(game => game.placeCard(1,req.body.x,req.body.y))
+    .then(game => res.send(game))
+    .catch(console.error);
+});
 
-  module.exports = router;
+
+module.exports = router;

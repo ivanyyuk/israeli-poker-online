@@ -19,19 +19,17 @@ const convertNumbersToCardObjects = (cardNumbers) => {
     else return 0
   })
   return arr;
-  //console.log(arr)
-  //for (var i = 0; i < cardNumbers.length; i++) {
-    //if (Array.isArray(cardNumbers[i])){
-      //arr = arr.concat(convertNumbersToCardObjects(cardNumbers[i]));
-    //} else {
-      //return new Card(cardNumbers[i])
-    //}
-  //}
+}
 
-  //console.log(arr)
-  //return arr;
+const mutateForFrontEnd = (game)  => {
+  game.p1Hands = convertNumbersToCardObjects(game.p1Hands);
+  game.p2Hands = convertNumbersToCardObjects(game.p2Hands);
+  game.deck.cards = convertNumbersToCardObjects(game.deck.cards);
+  game.p1NextCard = convertNumbersToCardObjects(game.p1NextCard);
+  game.p2NextCard = convertNumbersToCardObjects(game.p2NextCard);
 }
 
 module.exports = {
-  convertNumbersToCardObjects
+  convertNumbersToCardObjects,
+  mutateForFrontEnd
 }

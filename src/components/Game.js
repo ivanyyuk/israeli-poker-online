@@ -91,7 +91,9 @@ class Game extends Component {
     let cardToPlace = this.state.playerOne.hands[x][y];
     console.log('asd',cardToPlace)
     //game.placeCard(this.state.playerOne, x, cardToPlace)
-    axios.get(`${BASE_URL}`)
+    axios.post(`${BASE_URL}/placeCard/${this.props.params.gameId}`, {
+      x,y
+    })
       .then(res => console.log(res))
       //.then(() => 
         //this.setState(Object.assign({}, game)))
