@@ -20,10 +20,9 @@ middleware.applyMiddleware(app);
 
 //sockets
 const io = require('socket.io').listen(server);
-io.on('connection', function(socket) {
-  console.log('connected to soxxx')
-  io.emit('babelfish');
-})
+module.exports = io;
+require('./socket');  // require this to start it at run time 
+
 
 function seed() {
   let game;
@@ -51,6 +50,7 @@ function seed() {
     .then(createdGame => game = createdGame)
     .then(() => {
       let deck = new gameLogicDeck()
+      deck.shuffle(); 
       return Deck.create({
         cards: deck.cards,
         index: deck.index

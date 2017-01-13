@@ -32,7 +32,7 @@ class Game {
     this.currentRow++;
   }
 
-  placeCard(player, x, cardToPlace) {
+  placeCard(player, x,  cardToPlace) {
     console.log('running', player, x,this.currentRow, cardToPlace);
     console.log(player.nextCard)
     console.log(player === this.playerOne)

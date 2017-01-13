@@ -5,22 +5,38 @@ const router = express.Router();
 const { Game, Deck } = require('../game');
 const  db  = require('../db/db');
 const User = require('../db//models/user');
-
+const { convertNumbersToCardObjects } = require('../game/utils');
 
 router.get('/', function (req, res, next) {
   console.log('hit base api');
   res.sendStatus(200);
 });
 
+const dealInitial = function(game) {
+  let deckId;
+return   db.model('game').findById(game.id, {include : { all :true}})
+    .then(game => game.dealInitial())
+  .catch(console.error);
+}
 router.get('/newgame/:id', function (req, res, next) {
+  let currGame;
   console.log('asdasdasd',req.sessionID);
-  db.model('game').findById(req.params.id, { include: { all: true } })
+  db.model('game').findById(req.params.id, {include : { all:true } })
+    .then(game =>  dealInitial(game))
+    .then(gameState => {
+     return db.model('game').findById(gameState.id, {
+        include: {
+          all :true
+        }
+      })
+    })
     .then(game => {
-      console.log(game.toJSON());
-      game.deck.cards = Deck.prototype.convertNumericalToObjects.call(game.deck)
+      game.p1Hands = convertNumbersToCardObjects(game.p1Hands);
+      game.p2Hands = convertNumbersToCardObjects(game.p2Hands);
+      game.deck.cards = convertNumbersToCardObjects(game.deck.cards);
+      console.log(game.toJSON())
       res.send(game)
     })
-    //.then(game => res.send(game))
     .catch(console.error);
 
   //let game = new Game();

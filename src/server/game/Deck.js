@@ -13,7 +13,7 @@ class Deck {
       //deck.push(new Card(i));
       deck.push(i);
     }
-    return deck;
+    return deck
   }
 
   convertNumericalToObjects() {
@@ -31,11 +31,12 @@ class Deck {
 
   dealInitial(p1, p2) {
     for (let i = 0; i < 5; i++) {
-      p1.hands[i].cards[0] = this.cards[this.index];
+      p1[i][0] = this[this.index];
      this.index++;
-      p2.hands[i].cards[0] = this.cards[this.index];
+      p2[i][0] = this[this.index];
       this.index++;
     }
+   return  this.save();
   }
 
   dealNextTwo(p1, p2) { 

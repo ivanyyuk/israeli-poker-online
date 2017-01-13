@@ -27,6 +27,7 @@ class Game extends Component {
   }
 
   cardClicker(x, y) {
+    console.log(x,y)
     if (this.state.playerOne.hands[x][y] === 0) {
       this.moveCardPosition(x,this.state.currentRow);
       //game.placeCard(this.state.playerOne, x, y)

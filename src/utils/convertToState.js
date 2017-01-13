@@ -1,7 +1,6 @@
 import initialState from '../initialState.js';
 
 export default (gameState) => {
-  console.log('asdasd',gameState)
   let x = Object.assign({}, initialState, {
     playerOne: Object.assign({}, initialState.playerOne, {
       hands: gameState.p1Hands
@@ -10,7 +9,8 @@ export default (gameState) => {
     playerTwo: Object.assign({}, initialState.playerTwo, {
       hands: gameState.p2Hands
     }),
-    deck: gameState.deck
+    deck: gameState.deck,
+    currentRow: gameState.currentRow
   })
   console.log(x);
   return x;
