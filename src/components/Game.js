@@ -18,7 +18,7 @@ class Game extends Component {
   }
 
   componentDidMount(){
-    axios.get(`${BASE_URL}/newgame/${this.props.params.gameId}`)
+    axios.get(`${BASE_URL}/game/${this.props.params.gameId}`)
       .then(res => res.data)
       .then(gameState => convertToState(gameState))
       .then(state => this.setState(state))

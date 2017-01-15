@@ -5,6 +5,7 @@ const passport = require('passport');
 const bodyParser = require('body-parser');
 const morgan = require('morgan');
 const apiRouter = require('./api/');
+const db = require('./db/db');
 
 const allowCrossDomain = function(req, res, next) {
   res.header("Access-Control-Allow-Origin", "*");
@@ -14,21 +15,12 @@ const allowCrossDomain = function(req, res, next) {
 
 
 const applyMiddleware = app => {
-  app.use(session({
-    secret: 'whatevs',
-    resave: false,
-    saveUninitialized: false,
-    genid: function(req) {
-      return Math.floor(Math.random()*9999);
-    }
-  }))
-    .use(passport.initialize())
-    .use(passport.session())
+    app.use(allowCrossDomain)
     .use(bodyParser.json())
     .use(bodyParser.urlencoded({extended:true}))
     .use(morgan('dev'))
-    .use(allowCrossDomain)
     .use('/api', apiRouter);
+  require('./auth/')(app,db);
 }
 
 module.exports = {

@@ -7,7 +7,7 @@ const name = 'israeli-poker';
 const url = `postgres://localhost:5432/${name}`;
 
 const db = new Sequelize(url, {
-  logging: console.log,
+  logging: false,
   native: true //use pg-native for speed
 });
 

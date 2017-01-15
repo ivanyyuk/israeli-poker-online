@@ -23,6 +23,11 @@ const io = require('socket.io').listen(server);
 module.exports = io;
 require('./socket');  // require this to start it at run time 
 
+//error catch
+app.use(function (err, req, res, next) {
+  console.error(err);
+  res.sendStatus(500);
+});
 
 function seed() {
   let game;
@@ -30,34 +35,36 @@ function seed() {
   const User = require('../server/db/models/user');
   const Deck = require('../server/db/models/deck');
 
-  const gameLogicDeck = require('./game/Deck');
- return  Game.create({
-    p1Hands: [
-      [0,0,0,0,0],
-      [0,0,0,0,0],
-      [0,0,0,0,0],
-      [0,0,0,0,0],
-      [0,0,0,0,0]
-    ],
-    p2Hands:  [
-      [0,0,0,0,0],
-      [0,0,0,0,0],
-      [0,0,0,0,0],
-      [0,0,0,0,0],
-      [0,0,0,0,0]
-    ]
-  })
-    .then(createdGame => game = createdGame)
-    .then(() => {
-      let deck = new gameLogicDeck()
-      deck.shuffle(); 
-      return Deck.create({
-        cards: deck.cards,
-        index: deck.index
-      })
-    })
-    .then(deck => game.setDeck(deck))
-    .then(() => {
+  //const gameLogicDeck = require('./game/Deck');
+ //return  Game.create({
+    //p1Hands: [
+      //[0,0,0,0,0],
+      //[0,0,0,0,0],
+      //[0,0,0,0,0],
+      //[0,0,0,0,0],
+      //[0,0,0,0,0]
+    //],
+    //p2Hands:  [
+      //[0,0,0,0,0],
+      //[0,0,0,0,0],
+      //[0,0,0,0,0],
+      //[0,0,0,0,0],
+      //[0,0,0,0,0]
+    //]
+  //})
+    //.then(createdGame => game = createdGame)
+    //.then(() => {
+      //let deck = new gameLogicDeck()
+      //deck.shuffle(); 
+      //return Deck.create({
+        //cards: deck.cards,
+        //index: deck.index
+      //})
+    //})
+    //.then(deck => game.setDeck(deck))
+    return Game.createNewGame()
+    .then((createdGame) => {
+      game = createdGame
       const seedUsers = function () {
 
         const users = [
@@ -82,11 +89,13 @@ function seed() {
       return seedUsers();
     })
     .then(users => {
-      return game.setPlayerOne(users[0])
+      let index1 = Math.floor(Math.random() * 2);
+      let index2 = index1 === 0 ? 1 : 0;
+      return game.setPlayerOne(users[index1])
         .then(() =>
-          game.setPlayerTwo(users[1])
-        )
+        game.setPlayerTwo(users[index2]))
     })
+    .then(() => game.dealInitial())
     .catch(console.error);
 }
 
@@ -99,7 +108,7 @@ db.sync({force:true})
       console.log(`listening on ${PORT}`);
     })
   ) 
-.catch(console.error);
+  .catch(console.error);
 
 
 

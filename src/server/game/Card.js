@@ -51,7 +51,7 @@ class Card {
     case 4:
         return 'Spades';
     default:
-        throw Error('seed error:  seed:', seed, 'suitIndex: ', suitIndex);
+        throw Error(`seed error:  seed: ${seed}, suitIndex: ${suitIndex}, ${this.name}`);
     }
   }
 }

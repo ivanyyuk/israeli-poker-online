@@ -1,9 +1,9 @@
 'use strict';
 
-var crypto = require('crypto');
-var Sequelize = require('sequelize');
-
-var db = require('../db');
+const crypto = require('crypto');
+const Sequelize = require('sequelize');
+const _ = require('lodash');
+const db = require('../db');
 
 module.exports = db.define('user', {
     nickname: {

@@ -36,7 +36,6 @@ class Deck {
       p2[i][0] = this[this.index];
       this.index++;
     }
-   return  this.save();
   }
 
   dealNextTwo(p1, p2) { 
