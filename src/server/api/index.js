@@ -5,7 +5,8 @@ const router = express.Router();
 const { Game, Deck } = require('../game');
 const  db  = require('../db/db');
 const User = require('../db//models/user');
-const { convertNumbersToCardObjects, mutateForFrontEnd } = require('../game/utils');
+const { convertNumbersToCardObjects, mutateForFrontEnd, addPlayerPosition } = require('../game/utils');
+const io = require('../index').io;
 
 router.use('/game', require('./game'));
 router.get('/', function (req, res, next) {
@@ -56,12 +57,15 @@ router.get('/myGames/:id', function (req,res,next) {
 });
 
 router.post('/placeCard/:id', function(req,res,next) {
-  console.log(req.user)
+  console.log(req.body.playerPosition)
   return db.model('game').findById(req.params.id)
-    .then(game => game.placeCardAndClearNextCard(1,req.body.x,req.body.y))
+    .then(game => game.placeCardAndClearNextCard(req.body.playerPosition,req.body.x,req.body.y))
     .then(game => game.dealNextTwoIfNecessary())
     .then(game => db.model('game').findEntireGameById(game.id))
-    .then(game => res.send(mutateForFrontEnd(game)) )
+    .then(game => {
+      addPlayerPosition(game, req.body.playerPosition);
+      res.send(mutateForFrontEnd(game)) 
+    })
     .catch(console.error)
 });
 

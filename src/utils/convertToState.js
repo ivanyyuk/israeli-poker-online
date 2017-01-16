@@ -15,7 +15,6 @@ export default (gameState) => {
       hands: gameState[`p${oppIndex}Hands`],
       nextCard: gameState[`p${oppIndex}NextCard`]
     }),
-    deck: gameState.deck,
     currentRow: gameState.currentRow,
     playerPosition: gameState.playerPosition
   })

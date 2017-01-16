@@ -28,24 +28,24 @@ class Game extends Component {
 
   cardClicker(x, y) {
     console.log(x,y)
-    if (this.state.playerOne.hands[x][y] === 0) {
+    if (this.state.player.hands[x][y] === 0) {
       this.moveCardPosition(x,this.state.currentRow);
-      //game.placeCard(this.state.playerOne, x, y)
+      //game.placeCard(this.state.player, x, y)
     }
   }
 
   moveCardPosition(x) {
-    //playerOne starts with cardPosX and currentRow is the Y
+    //player starts with cardPosX and currentRow is the Y
     let y = this.state.currentRow;
-    let hands = this.state.playerOne.hands;
+    let hands = this.state.player.hands;
 
-    if (this.state.playerOne.cardPosX !== -1 && 
-      this.state.playerOne.cardPosX !== x && //so we don't place card where it already is
-      this.state.playerOne.hands[x][y] === 0) {
-        hands[x][y] = this.state.playerOne.hands[this.state.playerOne.cardPosX][this.state.currentRow];
-        hands[this.state.playerOne.cardPosX][this.state.currentRow] = 0;
+    if (this.state.player.cardPosX !== -1 && 
+      this.state.player.cardPosX !== x && //so we don't place card where it already is
+      this.state.player.hands[x][y] === 0) {
+        hands[x][y] = this.state.player.hands[this.state.player.cardPosX][this.state.currentRow];
+        hands[this.state.player.cardPosX][this.state.currentRow] = 0;
         this.setState(Object.assign({}, this.state, {
-          playerOne: {
+          player: {
             hands: hands,
             cardPosX: x,
             nextCard: {},
@@ -53,11 +53,11 @@ class Game extends Component {
           }
         }));
       }
-    else if (this.state.playerOne.cardPosX === -1 &&
-      this.state.playerOne.hands[x][y] === 0) {
-        hands[x][y] = this.state.playerOne.nextCard; 
+    else if (this.state.player.cardPosX === -1 &&
+      this.state.player.hands[x][y] === 0) {
+        hands[x][y] = this.state.player.nextCard; 
         this.setState(Object.assign({}, this.state, {
-          playerOne: {
+          player: {
             hands: hands,
             cardPosX: x,
             nextCard: {},
@@ -69,13 +69,13 @@ class Game extends Component {
 
   denyMove() {
     console.log('deny');
-    let hands = this.state.playerOne.hands;
-    let x = this.state.playerOne.cardPosX;
+    let hands = this.state.player.hands;
+    let x = this.state.player.cardPosX;
     let y = this.state.currentRow;
     let nextCard = hands[x][y];
     hands[x][y] = 0
     this.setState({
-      playerOne: {
+      player: {
         hands,
         nextCard,
         cardPosX: -1,
@@ -86,13 +86,14 @@ class Game extends Component {
 
   confirmMove() {
     console.log('move it');
-    let x = this.state.playerOne.cardPosX;
+    let x = this.state.player.cardPosX;
     let y = this.state.currentRow;
-    let cardToPlace = this.state.playerOne.hands[x][y];
+    let playerPosition = this.state.playerPosition;
+    let cardToPlace = this.state.player.hands[x][y];
     console.log('asd',cardToPlace)
-    //game.placeCard(this.state.playerOne, x, cardToPlace)
+    //game.placeCard(this.state.player, x, cardToPlace)
     axios.post(`${BASE_URL}/placeCard/${this.props.params.gameId}`, {
-      x,y
+      x,y, playerPosition
     })
       .then(res => this.setState(convertToState(res.data)))
       //.then(() => 

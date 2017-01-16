@@ -39,8 +39,13 @@ const mutateForFrontEnd = (game)  => {
   return game;
 }
 
+const addPlayerPosition = (game, playerPosition) => {
+  game=game.toJSON();
+  game.playerPosition = playerPosition;
+}
 
 module.exports = {
   convertNumbersToCardObjects,
-  mutateForFrontEnd
+  mutateForFrontEnd,
+  addPlayerPosition
 }

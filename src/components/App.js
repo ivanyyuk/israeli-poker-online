@@ -14,6 +14,9 @@ class App extends Component {
     socket.on('babelfish', function() {
       console.log('bablefish');
     })
+    socket.on('movedddd', function(data) {
+      console.log(data, 'moved')
+    })
   }
   render() {
     return(

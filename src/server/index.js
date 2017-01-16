@@ -11,6 +11,7 @@ const routes = require('./routes');
 // set up server
 const server = http.createServer();
 const app = express();
+const path = require('path');
 
 server.on('request', app);
 
@@ -19,7 +20,9 @@ middleware.applyMiddleware(app);
 
 app.use('/api', require('./api/'))
 app.use('/', require('./auth/'))
-
+app.get('/*', function(req,res,next) {
+  res.sendFile(path.join(__dirname,'../','../', '/public', 'index.html'))
+});
 //sockets
 const io = require('socket.io').listen(server);
 module.exports = { io, app};

@@ -2,7 +2,7 @@
 
 const router = require('express').Router();
 const Game = require('../db/db').model('game');
-const { mutateForFrontEnd } = require('../game/utils');
+const { mutateForFrontEnd, addPlayerPosition } = require('../game/utils');
 
 
 router.get('/:id', function(req, res, next) {
@@ -13,8 +13,7 @@ router.get('/:id', function(req, res, next) {
       let playerPosition;
       if (game.playerOneId === req.session.userId) playerPosition = 1;
       if (game.playerTwoId === req.session.userId) playerPosition = 2;
-      game = game.toJSON();
-      game.playerPosition = playerPosition;
+      addPlayerPosition(game, playerPosition)
       res.send(mutateForFrontEnd(game))
     })
     .catch(next);
