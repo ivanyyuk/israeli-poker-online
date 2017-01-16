@@ -12,14 +12,4 @@ module.exports = db.define('deck', {
     type: Sequelize.INTEGER,
     defaultValue: 0
   }
-},
-  {
-    instanceMethods: {
-      deal: function() {
-        console.log('deadlingggg', this.cards)
-        this.index++;
-        this.save();
-        return this.cards[this.index];
-      }
-    }
   })

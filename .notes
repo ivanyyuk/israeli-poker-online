@@ -1,0 +1,4 @@
+so far it should go
+
+create new Game in database - > assign player or players, -> create new deck numerically -> shuffle deck 
+-> assign deck to game - > deal out first cards -> send game to front end and convert to state

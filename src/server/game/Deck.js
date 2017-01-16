@@ -3,16 +3,21 @@ const Card = require('./Card');
 
 class Deck {
   constructor() {
-    this.cards = this.generateDeck();
+    this.cards = this.generateNumericalDeck();
     this.index = 0;
   }
 
-  generateDeck() {
+  generateNumericalDeck() {
     let deck = [];
     for (let i = 1; i <= 52; i ++) {
-      deck.push(new Card(i));
+      //deck.push(new Card(i));
+      deck.push(i);
     }
-    return deck;
+    return deck
+  }
+
+  convertNumericalToObjects() {
+    return this.cards.map(card => new Card(card))
   }
 
   shuffle() { //Fisher-Yates algorithm
@@ -26,9 +31,9 @@ class Deck {
 
   dealInitial(p1, p2) {
     for (let i = 0; i < 5; i++) {
-      p1.hands[i].cards[0] = this.cards[this.index];
+      p1[i][0] = this[this.index];
      this.index++;
-      p2.hands[i].cards[0] = this.cards[this.index];
+      p2[i][0] = this[this.index];
       this.index++;
     }
   }
