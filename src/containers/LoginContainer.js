@@ -7,6 +7,8 @@ export default class LoginContainer extends Component {
   constructor(props){
     super(props);
     this.handleClick = this.handleClick.bind(this);
+    this.logout = this.logout.bind(this);
+    this.getMe = this.getMe.bind(this);
   }
 
   handleClick(e,pIndex){
@@ -20,9 +22,21 @@ export default class LoginContainer extends Component {
       .catch(console.error);
   }
 
+  logout() {
+    axios.get('http://localhost:8000/logout')
+      .then(res => console.log(res))
+      .catch(console.error);
+  }
+
+  getMe() {
+    axios.get('http://localhost:8000/me')
+      .then(res => console.log(res))
+      .catch(console.error);
+  }
+
   render() {
     return(
-      <Login handleClick={this.handleClick} />
+      <Login getMe={this.getMe} logout={this.logout} handleClick={this.handleClick} />
     )
   }
 }

@@ -1,7 +1,7 @@
 'use strict'
 
 const PORT = 8000;
-
+const db = require('./db/db')
 const express = require('express');
 const http = require('http');
 
@@ -17,10 +17,12 @@ server.on('request', app);
 //add middleware
 middleware.applyMiddleware(app);
 
+app.use('/api', require('./api/'))
+app.use('/', require('./auth/'))
 
 //sockets
 const io = require('socket.io').listen(server);
-module.exports = io;
+module.exports = { io, app};
 require('./socket');  // require this to start it at run time 
 
 //error catch
@@ -35,33 +37,6 @@ function seed() {
   const User = require('../server/db/models/user');
   const Deck = require('../server/db/models/deck');
 
-  //const gameLogicDeck = require('./game/Deck');
- //return  Game.create({
-    //p1Hands: [
-      //[0,0,0,0,0],
-      //[0,0,0,0,0],
-      //[0,0,0,0,0],
-      //[0,0,0,0,0],
-      //[0,0,0,0,0]
-    //],
-    //p2Hands:  [
-      //[0,0,0,0,0],
-      //[0,0,0,0,0],
-      //[0,0,0,0,0],
-      //[0,0,0,0,0],
-      //[0,0,0,0,0]
-    //]
-  //})
-    //.then(createdGame => game = createdGame)
-    //.then(() => {
-      //let deck = new gameLogicDeck()
-      //deck.shuffle(); 
-      //return Deck.create({
-        //cards: deck.cards,
-        //index: deck.index
-      //})
-    //})
-    //.then(deck => game.setDeck(deck))
     return Game.createNewGame()
     .then((createdGame) => {
       game = createdGame
@@ -100,7 +75,6 @@ function seed() {
 }
 
 //databse and server
-const db = require('./db/db');
 db.sync({force:true})
   .then(seed)
   .then(() =>

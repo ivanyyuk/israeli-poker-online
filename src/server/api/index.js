@@ -33,7 +33,7 @@ router.get('/newgame/:id', function (req, res, next) {
 });
 
 router.get('/getUser', function (req, res, next) {
-  if (req.user) res.send(req.user);
+  if (req.session) res.send(req.session.userId);
   else res.send('no user');
 });
 
@@ -56,8 +56,10 @@ router.get('/myGames/:id', function (req,res,next) {
 });
 
 router.post('/placeCard/:id', function(req,res,next) {
+  console.log(req.user)
   return db.model('game').findById(req.params.id)
     .then(game => game.placeCardAndClearNextCard(1,req.body.x,req.body.y))
+    .then(game => game.dealNextTwoIfNecessary())
     .then(game => db.model('game').findEntireGameById(game.id))
     .then(game => res.send(mutateForFrontEnd(game)) )
     .catch(console.error)

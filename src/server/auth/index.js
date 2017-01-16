@@ -1,74 +1,54 @@
-'use strict'
-var path = require('path')
-var session = require('express-session')
-var passport = require('passport')
-var SequelizeStore = require('connect-session-sequelize')(session.Store)
-// var SC = require('soundcloud')
+const express = require('express');
+const router = express.Router();
+const User = require('../db/models/user');
+module.exports = router;
 
-var ENABLED_AUTH_STRATEGIES = [
-  'local'
-    // 'twitter',
-    // 'facebook',
-    // 'google'
-]
-
-module.exports = function (app, db) {
-  var dbStore = new SequelizeStore({
-    db: db
-  })
-
-  var User = db.model('user')
-
-  dbStore.sync()
-
-  app.use(session({
-    secret: 'lol',
-    store: dbStore,
-    resave: false,
-    saveUninitialized: false
-  }))
-
-    // Initialize passport and also allow it to read
-    // the request session information.
-  app.use(passport.initialize())
-  app.use(passport.session())
-
-    // When we give a cookie to the browser, it is just the userId (encrypted with our secret).
-  passport.serializeUser(function (user, done) {
-    done(null, user.id)
-  })
-
-    // When we receive a cookie from the browser, we use that id to set our req.user
-    // to a user found in the database.
-  passport.deserializeUser(function (id, done) {
-    User.findById(id)
-            .then(function (user) {
-              console.log('found user in deserializeUser')
-              done(null, user)
-            })
-            .catch(done)
-  })
-
-    // We provide a simple GET /session in order to get session information directly.
-    // This is used by the browser application (React/Redux) to determine if a user is
-    // logged in already.
-  app.get('/session', function (req, res) {
-    if (req.user) {
-      res.send(user)
-    }
-     else {
-      res.status(401).send('No authenticated user.')
+router.post('/login', function (req, res, next) {
+  User.findOne({
+    where: {
+      email: req.body.email
     }
   })
-
-    // Simple /logout route.
-  app.get('/logout', function (req, res) {
-    req.logout()
-    res.status(200).end()
+    .then((user) => {
+    if (!user) {
+      res.sendStatus(401);
+    } else if(user.correctPassword(req.body.password)){
+      req.session.userId = user.id;
+      console.log(req.session)
+      res.status(200).send(user.id.toString());
+    }
   })
+  .catch(next);
+});
 
-    // Each strategy enabled gets registered.
-  ENABLED_AUTH_STRATEGIES.forEach(function (strategyName) {
-    require(path.join(__dirname, strategyName))(app, db)
+router.get('/logout', function (req, res, next) {
+  req.session.destroy();
+  res.sendStatus(204);
+});
+
+router.post('/signup', function (req, res, next) {
+
+  User.findOrCreate({
+    where: {
+      email: req.body.email
+    },
+    defaults: {
+      password: req.body.password
+    }
   })
-}
+  .then(function (user) {
+    req.session.userId = user.id;
+    res.sendStatus(204);
+  });
+
+});
+
+router.get('/me', function (req, res, next) {
+  console.log(req.user)
+  if (req.user) {
+    res.send(req.user);
+  } else {
+    res.sendStatus(401);
+  }
+});
+

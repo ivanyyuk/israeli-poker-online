@@ -78,6 +78,13 @@ module.exports = db.define('game', {
         .catch(console.error);
     },
 
+    dealNextTwoIfNecessary() {
+      if (this.p1NextCard === 0 && this.p2NextCard === 0) {
+        return this.dealNextTwo();
+      }
+      else return this;
+    },
+
     incrementRow() {
       console.log('incrememnt')
       return this.update({

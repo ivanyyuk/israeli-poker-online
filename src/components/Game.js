@@ -18,7 +18,7 @@ class Game extends Component {
   }
 
   componentDidMount(){
-    axios.get(`${BASE_URL}/game/${this.props.params.gameId}`)
+    axios.get(`${BASE_URL}/game/${this.props.params.gameId}`,{ xhrFields:{ withCredentials: true}})
       .then(res => res.data)
       .then(gameState => convertToState(gameState))
       .then(state => this.setState(state))
@@ -94,7 +94,7 @@ class Game extends Component {
     axios.post(`${BASE_URL}/placeCard/${this.props.params.gameId}`, {
       x,y
     })
-      .then(res => console.log(res))
+      .then(res => this.setState(convertToState(res.data)))
       //.then(() => 
         //this.setState(Object.assign({}, game)))
       .catch(console.error)

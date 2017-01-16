@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import './App.css';
+//import './App.css';
 import Game from './Game';
 import LobbyContainer from '../containers/LobbyContainer';
 import { Route, Router, IndexRedirect, browserHistory } from 'react-router';

@@ -1,5 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router';
+import LoginContainer from '../containers/LoginContainer';
 
 export default ({ games }) =>
   <div>
@@ -10,5 +11,6 @@ export default ({ games }) =>
           </Link>
         ))
     }
+    <LoginContainer />
   </div>
 
