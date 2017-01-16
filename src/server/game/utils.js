@@ -24,7 +24,8 @@ const convertNumbersToCardObjects = (cardNumbers) => {
 }
 
 const mutateForFrontEnd = (game)  => {
-  game = game.toJSON(); 
+  //game = game.toJSON(); 
+  //console.log(game.playerPosition)
   game.p1Hands = convertNumbersToCardObjects(game.p1Hands);
   game.p2Hands = convertNumbersToCardObjects(game.p2Hands);
   game.p1NextCard = convertNumbersToCardObjects(game.p1NextCard);

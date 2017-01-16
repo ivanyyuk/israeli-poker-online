@@ -18,9 +18,10 @@ class App extends Component {
   render() {
     return(
       <Router history={browserHistory}>
-        <Route path='/game/:gameId' component={Game} />
-        <Route path='/login' component={LoginContainer} />
-        <Route path='/' component={LobbyContainer} />
+        <Route path='/' component={LobbyContainer} >
+          <Route path='/game/:gameId' component={Game} />
+          <Route path='/login' component={LoginContainer} />
+        </Route>
       </Router>
     )
   }

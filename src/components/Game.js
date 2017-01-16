@@ -18,7 +18,7 @@ class Game extends Component {
   }
 
   componentDidMount(){
-    axios.get(`${BASE_URL}/game/${this.props.params.gameId}`,{ xhrFields:{ withCredentials: true}})
+    axios.get(`${BASE_URL}/game/${this.props.params.gameId}`)
       .then(res => res.data)
       .then(gameState => convertToState(gameState))
       .then(state => this.setState(state))
@@ -105,8 +105,8 @@ class Game extends Component {
       <div className="App">
         <Board
           cardClicker={this.cardClicker}
-          playerOne={this.state.playerOne} 
-          playerTwo={this.state.playerTwo}
+          player={this.state.player} 
+          opponent={this.state.opponent}
         />
         <Menu denyMove={this.denyMove} confirmMove={this.confirmMove}/>
       </div>

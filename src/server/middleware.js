@@ -29,24 +29,23 @@ const applyMiddleware = app => {
       secret: 'agent man',
       resave: false,
       saveUninitialized: false,
-      maxAge: 999999999
     }))
     .use(passport.initialize())
     .use(passport.session())
 
+  passport.serializeUser(function (user, done) {
+    done(null, user.id);
+  });
+
+  passport.deserializeUser(function (id, done) {
+    User.findById(id)
+      .then(function (user) {
+        done(null, user);
+      })
+      .catch(done);
+  });
+
 }
-
-passport.serializeUser(function (user, done) {
-  done(null, user.id);
-});
-
-passport.deserializeUser(function (id, done) {
-  User.findById(id)
-    .then(function (user) {
-      done(null, user);
-    })
-    .catch(done);
-});
 
 module.exports = {
   applyMiddleware
