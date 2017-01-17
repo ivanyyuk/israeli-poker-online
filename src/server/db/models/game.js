@@ -20,9 +20,9 @@ module.exports = db.define('game', {
   p2NextCard : Sequelize.INTEGER
 }, {
   instanceMethods: {
-    //p1Hands or p2Hands is a nested array so hand card is row column  basically
-    //and value is the card number we actually passing
+    //p1Hands or p2Hands is a nested array so hand card is row column  basically x , y 
     //pIndex is 1 or 2 so we adjust right part of database
+    //when card is 4 we need to place card face down so send something else to front end
     placeCardAndClearNextCard(pIndex, hand, card){
       let playerHandsIndex = `p${pIndex}Hands`;
       let nextCardIndex = `p${pIndex}NextCard`;
@@ -141,7 +141,7 @@ module.exports = db.define('game', {
   },
   hooks: {
     beforeValidate: function(game) {
-      if (game.changed('p1Hands') || game.changed('p2Hands')) {
+      if (game.currentRow < 5 && (game.changed('p1Hands') || game.changed('p2Hands'))){
         return game.checkAndIncrementRow()
       }
     }

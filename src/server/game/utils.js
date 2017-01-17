@@ -2,6 +2,7 @@
 
 const _ = require('lodash');
 const Card = require('./Card');
+const hiddenCard = require('./hiddenCard');
 
 //this takes a numver, array or nested array of numbers
 //and makes card objecs or zero for no card 
@@ -23,6 +24,18 @@ const convertNumbersToCardObjects = (cardNumbers) => {
   return arr;
 }
 
+const hideLastRow= (hands) => {
+  //check the last row of each hand
+  //if a card is placed we send an 'x' to the front end as a placeholder
+  //to keep card hidden from opponent and not send the data over
+  hands.forEach(hand => {
+    if (hand[4] !== 0) {
+      console.log(hand[4])
+      hand[4] = new hiddenCard();
+    }
+  })
+}
+
 const mutateForFrontEnd = (game)  => {
   //game = game.toJSON(); 
   //console.log(game.playerPosition)
@@ -35,17 +48,32 @@ const mutateForFrontEnd = (game)  => {
   //})
   //_.forIn(obj, (value, key) => {
     //obj[key] = convertNumbersToCardObjects(value)
+  //hideLastRow(game.p2Hands);
   //});
+  //let playerToHideIndex = game.playerPosition === 1 ? 2 : 1;
+  //let playerToHide = `p${playerToHideIndex}Hands`;
+  //hideLastRow(game[playerToHide]);
+    hideCardsIfNecessary(game)
   return game;
 }
 
-const addPlayerPosition = (game, playerPosition) => {
+const addPlayerPositionAndReturnNewCopy = (game, playerPosition) => {
   game=game.toJSON();
   game.playerPosition = playerPosition;
+  return game;
+}
+
+const hideCardsIfNecessary = (game) => {
+  console.log('hidef if necessary ',game.playerPosition)
+  if (game.playerPosition === 1) {
+    hideLastRow(game.p2Hands);
+  } else if (game.playerPosition === 2) {
+    hideLastRow(game.p1Hands);
+  }
 }
 
 module.exports = {
   convertNumbersToCardObjects,
   mutateForFrontEnd,
-  addPlayerPosition
+  addPlayerPositionAndReturnNewCopy
 }

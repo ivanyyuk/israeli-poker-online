@@ -12,8 +12,7 @@ export default (gameState) => {
     })
   ,
     opponent: Object.assign({}, initialState.opponent, {
-      hands: gameState[`p${oppIndex}Hands`],
-      nextCard: gameState[`p${oppIndex}NextCard`]
+      hands: gameState[`p${oppIndex}Hands`]
     }),
     currentRow: gameState.currentRow,
     playerPosition: gameState.playerPosition

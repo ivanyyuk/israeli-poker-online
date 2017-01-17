@@ -45,8 +45,8 @@ router.post('/signup', function (req, res, next) {
 
 router.get('/me', function (req, res, next) {
   console.log(req.user)
-  if (req.user) {
-    res.send(req.user);
+  if (req.session.userId) {
+    res.json(req.session.userId);
   } else {
     res.sendStatus(401);
   }

@@ -30,10 +30,14 @@ class Game extends Component {
 
   componentDidMount(){
     this.getAndSetNewGameState();
+
     socket.on('moved', (data)  => {
      this.getAndSetNewGameState() ;
     })
+  }
 
+  componentWillUnmount(){
+    socket.off('moved');
   }
 
   cardClicker(x, y) {

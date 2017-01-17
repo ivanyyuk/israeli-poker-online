@@ -5,7 +5,7 @@ const router = express.Router();
 const { Game, Deck } = require('../game');
 const  db  = require('../db/db');
 const User = require('../db//models/user');
-const { convertNumbersToCardObjects, mutateForFrontEnd, addPlayerPosition } = require('../game/utils');
+const { convertNumbersToCardObjects, mutateForFrontEnd, addPlayerPositionAndReturnNewCopy } = require('../game/utils');
 const io = require('../index');
 const { emitMove } = require('../socket');
 
@@ -58,15 +58,16 @@ router.get('/myGames/:id', function (req,res,next) {
 });
 
 router.post('/placeCard/:id', function(req,res,next) {
-  console.log(req.body.playerPosition)
+  let { playerPosition, x, y } = req.body;
+
   return db.model('game').findById(req.params.id)
-    .then(game => game.placeCardAndClearNextCard(req.body.playerPosition,req.body.x,req.body.y))
+    .then(game => game.placeCardAndClearNextCard(playerPosition, x, y))
     .then(game => game.dealNextTwoIfNecessary())
     .then(game => db.model('game').findEntireGameById(game.id))
     .then(game => {
-      addPlayerPosition(game, req.body.playerPosition);
-      require('../index').emit('moved')
-      res.send(mutateForFrontEnd(game)) 
+      game = addPlayerPositionAndReturnNewCopy(game, req.body.playerPosition);
+      require('../index').emit('moved');
+      res.send(mutateForFrontEnd(game));
     })
     .catch(console.error)
 });

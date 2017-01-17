@@ -8,7 +8,8 @@ export default ({ player, opponent, cardClicker }) =>
   <div className='board'>
     <div className='opponent-board'>
       <OpponentHand cardClicker={cardClicker} hands={opponent.hands} />
-      <NextCard cardClicker={cardClicker} card={opponent.nextCard} />
+      { /* <NextCard cardClicker={cardClicker} card={opponent.nextCard} />*/ }
+      <div className='opponent-hand'>Profile</div>
     </div>
     <hr/>
     <div className='player-board'>
