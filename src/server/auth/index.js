@@ -14,7 +14,7 @@ router.post('/login', function (req, res, next) {
       res.sendStatus(401);
     } else if(user.correctPassword(req.body.password)){
       req.session.userId = user.id;
-      console.log(req.session)
+      //console.log(req.session)
       res.status(200).send(user.id.toString());
     }
   })

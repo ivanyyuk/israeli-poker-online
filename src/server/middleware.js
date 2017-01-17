@@ -22,7 +22,6 @@ const allowCrossDomain = function(req, res, next) {
 
 const applyMiddleware = app => {
   app.use(express.static('public'))
-    .use(morgan('dev'))
     .use(bodyParser.json())
     .use(bodyParser.urlencoded({extended:true}))
     .use(session({
@@ -30,6 +29,7 @@ const applyMiddleware = app => {
       resave: false,
       saveUninitialized: false,
     }))
+    .use(morgan('dev'))
     .use(passport.initialize())
     .use(passport.session())
 

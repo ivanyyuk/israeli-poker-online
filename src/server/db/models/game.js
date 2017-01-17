@@ -30,7 +30,6 @@ module.exports = db.define('game', {
       let obj = {};
       obj[playerHandsIndex] = this[playerHandsIndex];
       obj[nextCardIndex] = 0;
-      console.log(obj)
       return this.update(obj);
     },
 
@@ -86,7 +85,6 @@ module.exports = db.define('game', {
     },
 
     incrementRow() {
-      console.log('incrememnt')
       return this.update({
         currentRow: this.currentRow + 1
       })
@@ -94,11 +92,12 @@ module.exports = db.define('game', {
     },
 
     checkAndIncrementRow() {
-      console.log('checkand running')
-      for (let i =0; i < this.p1Hands[this.currentRow].length; i++) {
-        if (this.p1Hands[this.currentRow][i] === 0) return;
+      for (let i =0; i < this.p1Hands.length; i++) {
+        if (this.p1Hands[i][this.currentRow] === 0 ||
+          this.p2Hands[i][this.currentRow] === 0) 
+          return;
       }
-      return this.incrementRow();
+      this.incrementRow();
     }
   },
   classMethods: {
@@ -142,8 +141,8 @@ module.exports = db.define('game', {
   },
   hooks: {
     beforeValidate: function(game) {
-      if (game.changed('p1Hands')) {
-        game.checkAndIncrementRow();;
+      if (game.changed('p1Hands') || game.changed('p2Hands')) {
+        return game.checkAndIncrementRow()
       }
     }
   }
