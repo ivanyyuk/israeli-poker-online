@@ -7,6 +7,7 @@ const http = require('http');
 
 const middleware = require('./middleware');
 const routes = require('./routes');
+const seed = require('./seed');
 
 // set up server
 const server = http.createServer();
@@ -19,63 +20,19 @@ server.on('request', app);
 middleware.applyMiddleware(app);
 
 app.use('/api', require('./api/'))
-app.use('/', require('./auth/'))
-app.get('/*', function(req,res,next) {
-  res.sendFile(path.join(__dirname,'../','../', '/public', 'index.html'))
+app.use('/auth', require('./auth/'))
+app.get('*', function(req,res,next) {
+  res.sendFile(path.join(__dirname,'..','..', 'public', 'index.html'))
 });
 //sockets
-const io = require('socket.io').listen(server);
-module.exports = { io, app};
-require('./socket');  // require this to start it at run time 
+const io = require('./socket').listen(server);
+//obviouslty need to find a better way later
 
 //error catch
 app.use(function (err, req, res, next) {
   console.error(err);
   res.sendStatus(500);
 });
-
-function seed() {
-  let game;
-  const Game = require('../server/db/models/game');
-  const User = require('../server/db/models/user');
-  const Deck = require('../server/db/models/deck');
-
-    return Game.createNewGame()
-    .then((createdGame) => {
-      game = createdGame
-      const seedUsers = function () {
-
-        const users = [
-          {
-            email: 'p1@gmail.com',
-            nickname: 'p1',
-            password: 'test'
-          },
-          {
-            email: 'p2@gmail.com',
-            nickname: 'p2',
-            password: 'test'
-          }
-      ];
-
-        const creatingUsers = users.map(function (userObj) {
-          return User.create(userObj);
-        });
-
-        return Promise.all(creatingUsers);
-      }
-      return seedUsers();
-    })
-    .then(users => {
-      let index1 = Math.floor(Math.random() * 2);
-      let index2 = index1 === 0 ? 1 : 0;
-      return game.setPlayerOne(users[index1])
-        .then(() =>
-        game.setPlayerTwo(users[index2]))
-    })
-    .then(() => game.dealInitial())
-    .catch(console.error);
-}
 
 //databse and server
 db.sync({force:true})
@@ -91,4 +48,5 @@ db.sync({force:true})
 
 
 
+module.exports = io; // export this to socket.js to epxort again
 

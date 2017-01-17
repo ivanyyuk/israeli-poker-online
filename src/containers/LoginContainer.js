@@ -13,7 +13,7 @@ export default class LoginContainer extends Component {
 
   handleClick(e,pIndex){
     console.log(AUTH_URL)
-    axios.post(AUTH_URL, {
+    axios.post(`${AUTH_URL}/login`, {
       email: `p${pIndex}@gmail.com`,
       password: 'test'
     })
@@ -23,13 +23,13 @@ export default class LoginContainer extends Component {
   }
 
   logout() {
-    axios.get('http://localhost:8000/logout')
+    axios.get(`${AUTH_URL}/logout`)
       .then(res => console.log(res))
       .catch(console.error);
   }
 
   getMe() {
-    axios.get('http://localhost:8000/me')
+    axios.get(`${AUTH_URL}/me`)
       .then(res => console.log(res))
       .catch(console.error);
   }

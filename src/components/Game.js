@@ -7,6 +7,7 @@ import { BASE_URL } from '../constants';
 
 import initialState from '../initialState';
 import convertToState from '../utils/convertToState';
+import { socket } from './App';
 
 class Game extends Component {
   constructor() {
@@ -15,15 +16,24 @@ class Game extends Component {
     this.cardClicker = this.cardClicker.bind(this);
     this.denyMove = this.denyMove.bind(this);
     this.confirmMove = this.confirmMove.bind(this);
+    this.getAndSetNewGameState = this.getAndSetNewGameState.bind(this);
   }
 
-  componentDidMount(){
+  getAndSetNewGameState() {
     axios.get(`${BASE_URL}/game/${this.props.params.gameId}`)
       .then(res => res.data)
       .then(gameState => convertToState(gameState))
       .then(state => this.setState(state))
       .then(() => console.log(this.state))
       .catch(console.error);
+  }
+
+  componentDidMount(){
+    this.getAndSetNewGameState();
+    socket.on('moved', (data)  => {
+     this.getAndSetNewGameState() ;
+    })
+
   }
 
   cardClicker(x, y) {

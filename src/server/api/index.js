@@ -6,7 +6,8 @@ const { Game, Deck } = require('../game');
 const  db  = require('../db/db');
 const User = require('../db//models/user');
 const { convertNumbersToCardObjects, mutateForFrontEnd, addPlayerPosition } = require('../game/utils');
-const io = require('../index').io;
+const io = require('../index');
+const { emitMove } = require('../socket');
 
 router.use('/game', require('./game'));
 router.get('/', function (req, res, next) {
@@ -64,6 +65,7 @@ router.post('/placeCard/:id', function(req,res,next) {
     .then(game => db.model('game').findEntireGameById(game.id))
     .then(game => {
       addPlayerPosition(game, req.body.playerPosition);
+      require('../index').emit('moved')
       res.send(mutateForFrontEnd(game)) 
     })
     .catch(console.error)
