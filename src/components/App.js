@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 //import './App.css';
-import Game from './Game';
+import GameContainer from '../containers/GameContainer';
 import LobbyContainer from '../containers/LobbyContainer';
 import { Route, Router, IndexRedirect, browserHistory } from 'react-router';
 import LoginContainer from '../containers/LoginContainer';
@@ -24,7 +24,7 @@ class App extends Component {
     return(
       <Router history={browserHistory}>
         <Route path='/' component={LobbyContainer} >
-          <Route path='/game/:gameId' component={Game} />
+          <Route path='/game/:gameId' component={GameContainer} />
           <Route path='/login' component={LoginContainer} />
         </Route>
       </Router>

@@ -12,7 +12,5 @@ export default {
   },
   currentRow: 0,
   playerPosition: 0
-
-
 };
 

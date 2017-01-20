@@ -12,7 +12,6 @@ export default class LoginContainer extends Component {
   }
 
   handleClick(e,pIndex){
-    console.log(AUTH_URL)
     axios.post(`${AUTH_URL}/login`, {
       email: `p${pIndex}@gmail.com`,
       password: 'test'
