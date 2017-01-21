@@ -1,6 +1,6 @@
 'use strict'
 
-const _ = require('lodash');
+//const _ = require('lodash');
 const Card = require('./Card');
 const hiddenCard = require('./hiddenCard');
 
@@ -30,7 +30,7 @@ const hideLastRow= (hands) => {
   //to keep card hidden from opponent and not send the data over
   hands.forEach(hand => {
     if (hand[4] !== 0) {
-      console.log(hand[4])
+      //console.log(hand[4])
       hand[4] = new hiddenCard();
     }
   })
@@ -64,7 +64,7 @@ const addPlayerPositionAndReturnNewCopy = (game, playerPosition) => {
 }
 
 const hideCardsIfNecessary = (game) => {
-  console.log('hidef if necessary ',game.playerPosition)
+  //console.log('hidef if necessary ',game.playerPosition)
   if (game.playerPosition === 1) {
     hideLastRow(game.p2Hands);
   } else if (game.playerPosition === 2) {

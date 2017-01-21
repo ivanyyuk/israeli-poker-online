@@ -26,6 +26,7 @@ module.exports = db.define('game', {
     placeCardAndClearNextCard(pIndex, hand, card){
       let playerHandsIndex = `p${pIndex}Hands`;
       let nextCardIndex = `p${pIndex}NextCard`;
+      //console.log(playerHandsIndex)
       this[playerHandsIndex][hand][card] = this[nextCardIndex];
       let obj = {};
       obj[playerHandsIndex] = this[playerHandsIndex];
@@ -92,14 +93,21 @@ module.exports = db.define('game', {
     },
 
     checkAndIncrementRow() {
-      for (let i =0; i < this.p1Hands.length; i++) {
+      for (let i = 0; i < this.p1Hands.length; i++) {
         if (this.p1Hands[i][this.currentRow] === 0 ||
           this.p2Hands[i][this.currentRow] === 0) 
           return;
       }
+      //if we make it here and currentRow is 4 then we are at game over
+      if (this.currentRow === 4) return this.gameEndSequence();
+
       this.incrementRow();
+    },
+
+    gameEndSequence() {
+      console.log('game over over over');
     }
-  },
+},
   classMethods: {
     //this was done often enough to warrant it's own method
     //this comes back with deck and all players so we can send it to front end
@@ -140,8 +148,12 @@ module.exports = db.define('game', {
     }
   },
   hooks: {
-    beforeValidate: function(game) {
-      if (game.currentRow < 5 && (game.changed('p1Hands') || game.changed('p2Hands'))){
+    //was using beforeValidate but Sequelize bug(I think) had it run twice every time
+    //beforeUpdate runs only once
+    beforeUpdate: function(game) {
+      if (game.changed('p1Hands') || game.changed('p2Hands')){
+        console.log(`p1 has changed: ${game.changed('p1Hands')}`)
+        console.log(`p2 has changed: ${game.changed('p2Hands')}`)
         return game.checkAndIncrementRow()
       }
     }

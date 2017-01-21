@@ -24,7 +24,7 @@ const dealInitial = function(game) {
 
 router.get('/newgame/:id', function (req, res, next) {
   let currGame;
-  console.log('asdasdasd',req.sessionID);
+  //console.log('asdasdasd',req.sessionID);
   db.model('game').findById(req.params.id, {include : { all:true } })
     .then(game =>  dealInitial(game))
     .then(gameState => {

@@ -13,9 +13,9 @@ router.get('/:id', function(req, res, next) {
       let playerPosition;
       if (game.playerOneId === req.session.userId) playerPosition = 1;
       if (game.playerTwoId === req.session.userId) playerPosition = 2;
-      console.log('/id', playerPosition, game.playerOneId, game.playerTwoId, req.session.userId)
+      //console.log('/id', playerPosition, game.playerOneId, game.playerTwoId, req.session.userId)
       game = addPlayerPositionAndReturnNewCopy(game, playerPosition)
-      console.log('after adding', game)
+      //console.log('after adding', game)
       res.send(mutateForFrontEnd(game))
     })
     .catch(next);
