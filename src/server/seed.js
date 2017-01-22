@@ -9,7 +9,6 @@ module.exports = function seed() {
       let index1 = Math.floor(Math.random() * 2) +  1;
       let index2 = index1 === 1 ? 2 : 1;
       game = createdGame
-      //console.log(index1)
       return Promise.all([createdGame.setPlayerOne(index1),createdGame.setPlayerTwo(index2)])
     })
     

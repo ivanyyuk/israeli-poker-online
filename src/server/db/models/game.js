@@ -4,6 +4,7 @@ const db = require('../db');
 const User = require('./user');
 const Sequelize = require('Sequelize');
 const gameLogicDeck = require('../.././game/Deck');
+const { assignHandValues } = require('../../game/utils');
 
 module.exports = db.define('game', {
   currentRow: {
@@ -15,6 +16,12 @@ module.exports = db.define('game', {
   },
   p2Hands: {
     type: Sequelize.ARRAY(Sequelize.ARRAY(Sequelize.INTEGER))
+  },
+  p1HandsValues: {
+    type: Sequelize.ARRAY(Sequelize.INTEGER)
+  },
+  p2HandsValues: {
+    type: Sequelize.ARRAY(Sequelize.INTEGER)
   },
   p1NextCard: Sequelize.INTEGER,
   p2NextCard : Sequelize.INTEGER
@@ -91,7 +98,7 @@ module.exports = db.define('game', {
       })
         .catch(console.error)
     },
-
+    //this is where we check for game 
     checkAndIncrementRow() {
       for (let i = 0; i < this.p1Hands.length; i++) {
         if (this.p1Hands[i][this.currentRow] === 0 ||
@@ -99,15 +106,29 @@ module.exports = db.define('game', {
           return;
       }
       //if we make it here and currentRow is 4 then we are at game over
-      if (this.currentRow === 4) return this.gameEndSequence();
+      if (this.currentRow === 4) 
+        return this.gameEndSequence().catch(console.error)
 
       this.incrementRow();
     },
 
     gameEndSequence() {
-      console.log('game over over over');
+      return this.classifyHands()
+        .then(() => this.calculateWinner());
+    },
+
+    classifyHands() {
+     return this.update({
+        p1HandsValues: assignHandValues(this.p1Hands),
+        p2HandsValues: assignHandValues(this.p2Hands)
+      })
+      .catch(console.error)
+    },
+
+    calculateWinner() {
+      console.log('winner');
     }
-},
+  },
   classMethods: {
     //this was done often enough to warrant it's own method
     //this comes back with deck and all players so we can send it to front end

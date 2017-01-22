@@ -1,6 +1,5 @@
 'use strict'
 
-//const _ = require('lodash');
 const Card = require('./Card');
 const hiddenCard = require('./hiddenCard');
 
@@ -24,7 +23,7 @@ const convertNumbersToCardObjects = (cardNumbers) => {
   return arr;
 }
 
-const hideLastRow= (hands) => {
+const hideLastRow = (hands) => {
   //check the last row of each hand
   //if a card is placed we send an 'x' to the front end as a placeholder
   //to keep card hidden from opponent and not send the data over
@@ -37,23 +36,11 @@ const hideLastRow= (hands) => {
 }
 
 const mutateForFrontEnd = (game)  => {
-  //game = game.toJSON(); 
-  //console.log(game.playerPosition)
   game.p1Hands = convertNumbersToCardObjects(game.p1Hands);
   game.p2Hands = convertNumbersToCardObjects(game.p2Hands);
   game.p1NextCard = convertNumbersToCardObjects(game.p1NextCard);
   game.p2NextCard = convertNumbersToCardObjects(game.p2NextCard);
-  //let obj = _.pickBy(game, (value, key) => {
-    //return (key.includes('p1') || key.includes('p2'));
-  //})
-  //_.forIn(obj, (value, key) => {
-    //obj[key] = convertNumbersToCardObjects(value)
-  //hideLastRow(game.p2Hands);
-  //});
-  //let playerToHideIndex = game.playerPosition === 1 ? 2 : 1;
-  //let playerToHide = `p${playerToHideIndex}Hands`;
-  //hideLastRow(game[playerToHide]);
-    hideCardsIfNecessary(game)
+  hideCardsIfNecessary(game)
   return game;
 }
 
@@ -64,7 +51,6 @@ const addPlayerPositionAndReturnNewCopy = (game, playerPosition) => {
 }
 
 const hideCardsIfNecessary = (game) => {
-  //console.log('hidef if necessary ',game.playerPosition)
   if (game.playerPosition === 1) {
     hideLastRow(game.p2Hands);
   } else if (game.playerPosition === 2) {
@@ -72,8 +58,21 @@ const hideCardsIfNecessary = (game) => {
   }
 }
 
+//takes one hand (array) and returns a numerical value based on poker ranking
+// 0 is high card, 1 is par etc .... all the way up to straight flush 
+const classifyOneHand = (handsArray)  => {
+  console.log(handsArray);
+}
+
+// takes an  entier p1Hand or p2Hand nested array and classifies 
+// then returns an array of hand values ready to be placed in db
+const assignHandValues = (allHands) => {
+  console.log(allHands)
+}
+
 module.exports = {
   convertNumbersToCardObjects,
   mutateForFrontEnd,
-  addPlayerPositionAndReturnNewCopy
+  addPlayerPositionAndReturnNewCopy,
+  assignHandValues
 }

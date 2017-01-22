@@ -36,7 +36,7 @@ app.use(function (err, req, res, next) {
 
 //databse and server
 db.sync()
-  //.then(seed)
+  .then(seed)
   .then(() =>
     server.listen(PORT, () => {
       console.log(`listening on ${PORT}`);
