@@ -60,15 +60,14 @@ const hideCardsIfNecessary = (game) => {
 
 //takes one hand (array) and returns a numerical value based on poker ranking
 // 0 is high card, 1 is par etc .... all the way up to straight flush 
-const classifyOneHand = (handsArray)  => {
-  console.log(handsArray);
+const classifyOneHand = handsArray  => {
+  return  3;
 }
 
 // takes an  entier p1Hand or p2Hand nested array and classifies 
 // then returns an array of hand values ready to be placed in db
-const assignHandValues = (allHands) => {
-  console.log(allHands)
-}
+const assignHandValues = allHands => allHands.map(hand => classifyOneHand(hand));
+
 
 module.exports = {
   convertNumbersToCardObjects,

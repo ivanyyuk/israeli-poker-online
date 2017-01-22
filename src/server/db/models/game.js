@@ -24,7 +24,11 @@ module.exports = db.define('game', {
     type: Sequelize.ARRAY(Sequelize.INTEGER)
   },
   p1NextCard: Sequelize.INTEGER,
-  p2NextCard : Sequelize.INTEGER
+  p2NextCard : Sequelize.INTEGER,
+  gameOver: {
+    type: Sequelize.BOOLEAN,
+    defaultValue: false
+  }
 }, {
   instanceMethods: {
     //p1Hands or p2Hands is a nested array so hand card is row column  basically x , y 
@@ -113,11 +117,15 @@ module.exports = db.define('game', {
     },
 
     gameEndSequence() {
-      return this.classifyHands()
+      return this.update({
+        gameOver: true
+      })
+        .then(() =>this.classifyHands())
         .then(() => this.calculateWinner());
     },
 
     classifyHands() {
+      console.log('classify')
      return this.update({
         p1HandsValues: assignHandValues(this.p1Hands),
         p2HandsValues: assignHandValues(this.p2Hands)
@@ -172,7 +180,7 @@ module.exports = db.define('game', {
     //was using beforeValidate but Sequelize bug(I think) had it run twice every time
     //beforeUpdate runs only once
     beforeUpdate: function(game) {
-      if (game.changed('p1Hands') || game.changed('p2Hands')){
+      if (!game.gameOver && (game.changed('p1Hands') || game.changed('p2Hands'))){
         console.log(`p1 has changed: ${game.changed('p1Hands')}`)
         console.log(`p2 has changed: ${game.changed('p2Hands')}`)
         return game.checkAndIncrementRow()
