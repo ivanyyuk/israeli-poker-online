@@ -1,9 +1,8 @@
 import React from 'react';
-import ConfirmButton from './ConfirmButton';
-import DenyButton from './DenyButton';
+import ActionButton from './ActionButton';
 
 export default ({ denyMove, confirmMove }) => 
   <div className='menu'>
-    <DenyButton handleClick={denyMove}/>
-    <ConfirmButton handleClick={confirmMove}/>
+    <ActionButton handleClick={denyMove} buttonText='Deny Move' />
+    <ActionButton handleClick={confirmMove} buttonText='Confirm Move' />
   </div>

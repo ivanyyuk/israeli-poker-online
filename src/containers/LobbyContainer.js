@@ -31,7 +31,11 @@ export default class LobbyContainer extends Component {
 
   render() {
     return (
+      <div>
+        {this.props.children}
       <Lobby games={this.state.games}/>
+    </div>
+
     )
   }
 }

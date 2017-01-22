@@ -5,7 +5,9 @@ const router = express.Router();
 const { Game, Deck } = require('../game');
 const  db  = require('../db/db');
 const User = require('../db//models/user');
-const { convertNumbersToCardObjects, mutateForFrontEnd } = require('../game/utils');
+const { convertNumbersToCardObjects, mutateForFrontEnd, addPlayerPositionAndReturnNewCopy } = require('../game/utils');
+const io = require('../index');
+const { emitMove } = require('../socket');
 
 router.use('/game', require('./game'));
 router.get('/', function (req, res, next) {
@@ -22,7 +24,7 @@ const dealInitial = function(game) {
 
 router.get('/newgame/:id', function (req, res, next) {
   let currGame;
-  console.log('asdasdasd',req.sessionID);
+  //console.log('asdasdasd',req.sessionID);
   db.model('game').findById(req.params.id, {include : { all:true } })
     .then(game =>  dealInitial(game))
     .then(gameState => {
@@ -33,7 +35,7 @@ router.get('/newgame/:id', function (req, res, next) {
 });
 
 router.get('/getUser', function (req, res, next) {
-  if (req.user) res.send(req.user);
+  if (req.session) res.send(req.session.userId);
   else res.send('no user');
 });
 
@@ -56,10 +58,17 @@ router.get('/myGames/:id', function (req,res,next) {
 });
 
 router.post('/placeCard/:id', function(req,res,next) {
+  let { playerPosition, x, y } = req.body;
+
   return db.model('game').findById(req.params.id)
-    .then(game => game.placeCardAndClearNextCard(1,req.body.x,req.body.y))
+    .then(game => game.placeCardAndClearNextCard(playerPosition, x, y))
+    .then(game => game.dealNextTwoIfNecessary())
     .then(game => db.model('game').findEntireGameById(game.id))
-    .then(game => res.send(mutateForFrontEnd(game)) )
+    .then(game => {
+      game = addPlayerPositionAndReturnNewCopy(game, req.body.playerPosition);
+      require('../index').emit('moved');
+      res.send(mutateForFrontEnd(game));
+    })
     .catch(console.error)
 });
 

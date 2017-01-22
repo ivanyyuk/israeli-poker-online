@@ -1,3 +1,4 @@
+'use strict'
 
 const Card = require('./Card');
 

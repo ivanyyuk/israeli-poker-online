@@ -7,11 +7,12 @@ export default class LoginContainer extends Component {
   constructor(props){
     super(props);
     this.handleClick = this.handleClick.bind(this);
+    this.logout = this.logout.bind(this);
+    this.getMe = this.getMe.bind(this);
   }
 
   handleClick(e,pIndex){
-    console.log(AUTH_URL)
-    axios.post(AUTH_URL, {
+    axios.post(`${AUTH_URL}/login`, {
       email: `p${pIndex}@gmail.com`,
       password: 'test'
     })
@@ -20,9 +21,21 @@ export default class LoginContainer extends Component {
       .catch(console.error);
   }
 
+  logout() {
+    axios.get(`${AUTH_URL}/logout`)
+      .then(res => console.log(res))
+      .catch(console.error);
+  }
+
+  getMe() {
+    axios.get(`${AUTH_URL}/me`)
+      .then(res => console.log(res))
+      .catch(console.error);
+  }
+
   render() {
     return(
-      <Login handleClick={this.handleClick} />
+      <Login getMe={this.getMe} logout={this.logout} handleClick={this.handleClick} />
     )
   }
 }

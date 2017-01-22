@@ -4,16 +4,17 @@ import OpponentHand from './OpponentHand';
 import NextCard from './NextCard';
 
 
-export default ({ playerOne, playerTwo, cardClicker }) =>
+export default ({ player, opponent, cardClicker }) =>
   <div className='board'>
     <div className='opponent-board'>
-      <OpponentHand cardClicker={cardClicker} hands={playerTwo.hands} />
-      <NextCard cardClicker={cardClicker} card={playerTwo.nextCard} />
+      <OpponentHand cardClicker={cardClicker} hands={opponent.hands} />
+      { /* <NextCard cardClicker={cardClicker} card={opponent.nextCard} />*/ }
+      <div className='opponent-hand'>Profile</div>
     </div>
     <hr/>
     <div className='player-board'>
-      <PlayerHand cardClicker={cardClicker} hands={playerOne.hands} />
-      <NextCard cardClicker={cardClicker} card={playerOne.nextCard} />
+      <PlayerHand cardClicker={cardClicker} hands={player.hands} />
+      <NextCard cardClicker={cardClicker} card={player.nextCard} />
     </div>
   </div>
 

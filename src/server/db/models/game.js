@@ -4,6 +4,7 @@ const db = require('../db');
 const User = require('./user');
 const Sequelize = require('Sequelize');
 const gameLogicDeck = require('../.././game/Deck');
+const { assignHandValues } = require('../../game/utils');
 
 module.exports = db.define('game', {
   currentRow: {
@@ -16,21 +17,27 @@ module.exports = db.define('game', {
   p2Hands: {
     type: Sequelize.ARRAY(Sequelize.ARRAY(Sequelize.INTEGER))
   },
+  p1HandsValues: {
+    type: Sequelize.ARRAY(Sequelize.INTEGER)
+  },
+  p2HandsValues: {
+    type: Sequelize.ARRAY(Sequelize.INTEGER)
+  },
   p1NextCard: Sequelize.INTEGER,
   p2NextCard : Sequelize.INTEGER
 }, {
   instanceMethods: {
-    //p1Hands or p2Hands is a nested array so hand card is row column  basically
-    //and value is the card number we actually passing
+    //p1Hands or p2Hands is a nested array so hand card is row column  basically x , y 
     //pIndex is 1 or 2 so we adjust right part of database
+    //when card is 4 we need to place card face down so send something else to front end
     placeCardAndClearNextCard(pIndex, hand, card){
       let playerHandsIndex = `p${pIndex}Hands`;
       let nextCardIndex = `p${pIndex}NextCard`;
+      //console.log(playerHandsIndex)
       this[playerHandsIndex][hand][card] = this[nextCardIndex];
       let obj = {};
       obj[playerHandsIndex] = this[playerHandsIndex];
       obj[nextCardIndex] = 0;
-      console.log(obj)
       return this.update(obj);
     },
 
@@ -78,20 +85,48 @@ module.exports = db.define('game', {
         .catch(console.error);
     },
 
+    dealNextTwoIfNecessary() {
+      if (this.p1NextCard === 0 && this.p2NextCard === 0) {
+        return this.dealNextTwo();
+      }
+      else return this;
+    },
+
     incrementRow() {
-      console.log('incrememnt')
       return this.update({
         currentRow: this.currentRow + 1
       })
         .catch(console.error)
     },
-
+    //this is where we check for game 
     checkAndIncrementRow() {
-      console.log('checkand running')
-      for (let i =0; i < this.p1Hands[this.currentRow].length; i++) {
-        if (this.p1Hands[this.currentRow][i] === 0) return;
+      for (let i = 0; i < this.p1Hands.length; i++) {
+        if (this.p1Hands[i][this.currentRow] === 0 ||
+          this.p2Hands[i][this.currentRow] === 0) 
+          return;
       }
-      return this.incrementRow();
+      //if we make it here and currentRow is 4 then we are at game over
+      if (this.currentRow === 4) 
+        return this.gameEndSequence().catch(console.error)
+
+      this.incrementRow();
+    },
+
+    gameEndSequence() {
+      return this.classifyHands()
+        .then(() => this.calculateWinner());
+    },
+
+    classifyHands() {
+     return this.update({
+        p1HandsValues: assignHandValues(this.p1Hands),
+        p2HandsValues: assignHandValues(this.p2Hands)
+      })
+      .catch(console.error)
+    },
+
+    calculateWinner() {
+      console.log('winner');
     }
   },
   classMethods: {
@@ -134,9 +169,13 @@ module.exports = db.define('game', {
     }
   },
   hooks: {
-    beforeValidate: function(game) {
-      if (game.changed('p1Hands')) {
-        game.checkAndIncrementRow();;
+    //was using beforeValidate but Sequelize bug(I think) had it run twice every time
+    //beforeUpdate runs only once
+    beforeUpdate: function(game) {
+      if (game.changed('p1Hands') || game.changed('p2Hands')){
+        console.log(`p1 has changed: ${game.changed('p1Hands')}`)
+        console.log(`p2 has changed: ${game.changed('p2Hands')}`)
+        return game.checkAndIncrementRow()
       }
     }
   }

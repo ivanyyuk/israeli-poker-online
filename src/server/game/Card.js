@@ -1,3 +1,4 @@
+'use strict'
 
 class Card {
   constructor(seed){ // seed will be 1 to 52
